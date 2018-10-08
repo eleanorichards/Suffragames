@@ -9,7 +9,7 @@ namespace RockThrow
     {
         private Vector2 velocity;
         public float smoothTime;
-		public float minCamPos = 0.0f;
+        public float minYPos;
         private Vector3 startPos;
         private GameObject rock;
         private LaunchRock launchRock;
@@ -41,9 +41,9 @@ namespace RockThrow
             {
                 Vector2 pos = transform.position;
                 Vector2 rockPos = rock.transform.position;
-				if (rockPos.y <= minCamPos) {
-					rockPos.y = minCamPos;
-				}
+                if (rockPos.y <= minYPos)
+                    rockPos.y = 0.0f;
+
                 transform.position = new Vector3(Mathf.SmoothDamp(pos.x, rockPos.x, ref velocity.x, smoothTime),
                     Mathf.SmoothDamp(pos.y, rockPos.y, ref velocity.y, smoothTime), startPos.z);
             }

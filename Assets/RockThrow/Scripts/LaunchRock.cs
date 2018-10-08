@@ -7,22 +7,25 @@ namespace RockThrow
     public class LaunchRock : MonoBehaviour
     {
         public float rockGrav = 1.0f;
-		public float xLaunchMultiplier;
-		public float yLaunchMultiplier;
+        public float xLaunchMultiplier;
+        public float yLaunchMultiplier;
 
-		[HideInInspector]
+        [HideInInspector]
         public bool countDownStarted = false;
-		[HideInInspector]
+
+        [HideInInspector]
         public bool countdownFinished = false;
 
-		private float preparationTime = 3.0f;
-		private float currentTime = 0.0f;
+        private float preparationTime = 3.0f;
+        private float currentTime = 0.0f;
         private Vector3 startPos;
         private Rigidbody2D rock;
         private int noOfPresses = 0;
         private CameraFollow camScript;
         private UIManager uiManager;
-		private Speedometer speedometer;
+        private Speedometer speedometer;
+
+        private bool end_of_round = false;
 
         // Use this for initialization
         private void Start()
@@ -32,30 +35,33 @@ namespace RockThrow
             startPos = transform.position;
             camScript = GameObject.Find("Main Camera").GetComponent<CameraFollow>();
             uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
-			speedometer = GameObject.Find ("speedometer").GetComponent<Speedometer> ();
+            speedometer = GameObject.Find("speedometer").GetComponent<Speedometer>();
         }
 
         // Update is called once per frame
         private void Update()
         {
-            TakeInput();
-            //Countdown Started
-            if (countDownStarted && currentTime < preparationTime)
+            if (!end_of_round)
             {
-                uiManager.StartCountdown();
-                currentTime += Time.deltaTime;
-            }
-            //Countdown finished
-            else if (currentTime >= preparationTime && countdownFinished == false)
-            {
-                countdownFinished = true;
-                rock.gravityScale = rockGrav;
-                ThrowRock();
-            }
-            //Rock stopped moving
-            if (countdownFinished && rock.velocity.x <= 0.1f && rock.velocity.y <= 0.1f)
-            {
-                StartCoroutine(CheckForStationary());
+                TakeInput();
+                //Countdown Started
+                if (countDownStarted && currentTime < preparationTime)
+                {
+                    uiManager.StartCountdown();
+                    currentTime += Time.deltaTime;
+                }
+                //Countdown finished
+                else if (currentTime >= preparationTime && countdownFinished == false)
+                {
+                    countdownFinished = true;
+                    rock.gravityScale = rockGrav;
+                    ThrowRock();
+                }
+                //Rock stopped moving
+                if (countdownFinished && rock.velocity.x <= 0.1f && rock.velocity.y <= 0.1f)
+                {
+                    StartCoroutine(CheckForStationary());
+                }
             }
         }
 
@@ -69,15 +75,14 @@ namespace RockThrow
             else if (Input.GetButtonDown("Jump") && countDownStarted && !countdownFinished)
             {
                 noOfPresses++;
-				speedometer.IncreaseTaps ();
+                speedometer.IncreaseTaps();
             }
         }
 
         private void ThrowRock()
         {
-            print(noOfPresses);
-            rock.AddForce(new Vector2(noOfPresses*xLaunchMultiplier, noOfPresses*yLaunchMultiplier), ForceMode2D.Impulse);
-			rock.AddForceAtPosition (new Vector3 (0, 1, 0), new Vector3 (-0.2f, 0, 0)); 
+            rock.AddForce(new Vector2(noOfPresses * xLaunchMultiplier, noOfPresses * yLaunchMultiplier), ForceMode2D.Impulse);
+            rock.AddForceAtPosition(new Vector3(0, 1, 0), new Vector3(-0.2f, 0, 0));
         }
 
         private void ResetGame()
@@ -89,6 +94,10 @@ namespace RockThrow
             currentTime = 0.0f;
             noOfPresses = 0;
             rock.gravityScale = 0;
+            camScript.ResetCamera();
+            uiManager.Reset();
+            speedometer.ResetSpeedo();
+            StopAllCoroutines();
         }
 
         private IEnumerator CheckForStationary()
@@ -96,11 +105,9 @@ namespace RockThrow
             yield return new WaitForSeconds(2.0f);
             if (countdownFinished && rock.velocity.x <= 0.1f && rock.velocity.y <= 0.1f)
             {
+                uiManager.SetEndMessage();
+                yield return new WaitForSeconds(3.0f);
                 ResetGame();
-                camScript.ResetCamera();
-                uiManager.Reset();
-				speedometer.ResetSpeedo ();
-                StopAllCoroutines();
             }
         }
     }

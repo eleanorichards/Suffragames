@@ -58,7 +58,7 @@ namespace RockThrow
             switch (col.collider.tag)
             {
                 case "Ground":
-                    camFollow.ShakeCamera(0.2f, 0.5f);
+                    camFollow.ShakeCamera(0.1f, 0.3f);
                     break;
 
                 default:
