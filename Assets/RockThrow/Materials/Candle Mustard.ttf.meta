@@ -1,0 +1,21 @@
+fileFormatVersion: 2
+guid: 36359c06faa8fc8439d9140e7700b4b1
+timeCreated: 1533650299
+licenseType: Free
+TrueTypeFontImporter:
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: Candle Mustard
+  fontNames:
+  - Candle Mustard
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
