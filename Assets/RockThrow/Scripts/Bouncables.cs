@@ -14,8 +14,7 @@ public class Bouncables : MonoBehaviour
     // Use this for initialization
     private void Start()
     {
-        //seed = (int)(Time.time*10.0f);
-        //Random.InitState(seed);
+
         SpawnBouncables(50.0f);
     }
 

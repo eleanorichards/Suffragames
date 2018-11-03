@@ -27,7 +27,7 @@ public class Speedometer : MonoBehaviour {
 		if (pointer.transform.rotation.z > maxRotation) 
 		{
 			
-			zRotation -= 10.0f;
+			zRotation -= 5.0f;
 			Quaternion target = Quaternion.Euler(0, 0, zRotation);
 
 			pointer.transform.rotation = target;

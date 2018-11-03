@@ -23,6 +23,9 @@ namespace RockThrow
 		private float travelDistance = 0.0f;
 		private int stepsTravelled = 1;
 
+        public float minVelocity = -10.0f;
+        public float maxVelocity = 10.0f;
+        public float MaxRotationSpeed = 1.0f;
 
         // Use this for initialization
         private void Start()
@@ -50,7 +53,9 @@ namespace RockThrow
 				stepsTravelled++;
 				bouncables.SpawnBouncables (rockRig.transform.position.x + 100.0f);
 			}
-
+            Mathf.Clamp(rockRig.velocity.y, minVelocity, maxVelocity);
+            Mathf.Clamp(rockRig.angularVelocity, 0.0f, MaxRotationSpeed);
+            Debug.Log(rockRig.angularVelocity);
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -58,7 +63,7 @@ namespace RockThrow
             switch (col.collider.tag)
             {
                 case "Ground":
-                    camFollow.ShakeCamera(0.1f, 0.3f);
+                    camFollow.ShakeCamera(0.1f, 0.2f);
                     break;
 
                 default:
@@ -144,7 +149,8 @@ namespace RockThrow
 
         private void KnockRock(float strength)
         {
-            rockRig.AddForce(new Vector2(strength*0.05f, strength) * (Mathf.Abs(rockRig.velocity.y) + rockRig.velocity.x), ForceMode2D.Impulse);
+
+            rockRig.AddForce(new Vector2(strength*0.1f, strength) * (Mathf.Abs(rockRig.velocity.y) + rockRig.velocity.x), ForceMode2D.Impulse);
             particles.FireParticles(rockRig.transform.position);
 
         }
