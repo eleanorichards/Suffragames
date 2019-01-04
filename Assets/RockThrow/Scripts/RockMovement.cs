@@ -17,6 +17,7 @@ namespace RockThrow
 
         public float studentBounciness;
         public float suffragetteBounciness;
+        public float horsePooBounciness;
         private bool inSlapZone = false;
         private bool slappedInTime = false;
 
@@ -26,7 +27,8 @@ namespace RockThrow
         public float minVelocity = -10.0f;
         public float maxVelocity = 10.0f;
         public float MaxRotationSpeed = 1.0f;
-
+        public int MaxHeight = 100;
+        public float BonusGravity = 1.0f;
         // Use this for initialization
         private void Start()
         {
@@ -53,9 +55,13 @@ namespace RockThrow
 				stepsTravelled++;
 				bouncables.SpawnBouncables (rockRig.transform.position.x + 100.0f);
 			}
+            if(rockRig.transform.position.y >= MaxHeight)
+            {
+                print("pushing");
+                PushRockDown(BonusGravity);
+            }
             Mathf.Clamp(rockRig.velocity.y, minVelocity, maxVelocity);
             Mathf.Clamp(rockRig.angularVelocity, 0.0f, MaxRotationSpeed);
-            Debug.Log(rockRig.angularVelocity);
         }
 
         private void OnCollisionEnter2D(Collision2D col)
@@ -93,9 +99,9 @@ namespace RockThrow
                     SuffragetteSlap();
                     break;
 
-                case "manhole":
-                //StopRock();
-
+                case "HorsePoop":
+                    KnockRock(horsePooBounciness);
+                    break;
                 default:
                     break;
             }
@@ -149,10 +155,17 @@ namespace RockThrow
 
         private void KnockRock(float strength)
         {
+            if(strength != 0.0f)
+            {
+                rockRig.AddForce(new Vector2(strength*0.1f, strength) * (Mathf.Abs(rockRig.velocity.y) + rockRig.velocity.x), ForceMode2D.Impulse);
+                particles.FireParticles(rockRig.transform.position);
 
-            rockRig.AddForce(new Vector2(strength*0.1f, strength) * (Mathf.Abs(rockRig.velocity.y) + rockRig.velocity.x), ForceMode2D.Impulse);
-            particles.FireParticles(rockRig.transform.position);
+            }
+        }
 
+        private void PushRockDown(float strength)
+        {
+            rockRig.AddForce(new Vector2(0.0f, -strength), ForceMode2D.Impulse);
         }
     }
 }

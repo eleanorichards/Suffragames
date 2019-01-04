@@ -15,7 +15,7 @@ public class Bouncables : MonoBehaviour
     private void Start()
     {
 
-        SpawnBouncables(50.0f);
+        SpawnBouncables(0.0f);
     }
 
     // Update is called once per frame
@@ -44,25 +44,30 @@ public class Bouncables : MonoBehaviour
     private GameObject ReturnObject()
     {
         randint = Random.Range(0, 100);
-        if (randint < 25)
+        if (randint < 20)
         {
             //normal
             return BounceablePrefabs[0];
         }
-        else if (randint < 50)
+        else if (randint < 40)
         {
             //normal
             return BounceablePrefabs[1];
         }
-        else if (randint < 75)
+        else if (randint < 60)
         {
             //suffragette
             return BounceablePrefabs[2];
         }
-        else if (randint < 100)
+        else if (randint < 80)
         {
             //obstacle
             return BounceablePrefabs[3];
+        }
+        else if (randint < 100)
+        {
+            //obstacle
+            return BounceablePrefabs[4];
         }
         return BounceablePrefabs[randint];
     }
